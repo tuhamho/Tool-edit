@@ -167,7 +167,7 @@ class App(tk.Tk):
         actions = ttk.Frame(root)
         actions.pack(fill="x", pady=(2, 8))
         ttk.Button(actions, text="Kiểm tra timeline", command=self.preview).pack(side="left")
-        self.create_button = ttk.Button(actions, text="Tạo video để đưa vào CapCut", command=self.create)
+        self.create_button = ttk.Button(actions, text="Tạo video MP4", command=self.create)
         self.create_button.pack(side="left", padx=8)
         self.table = ttk.Treeview(root, columns=("number", "image", "start", "end", "duration"), show="headings", height=12)
         for col, label, width in [("number", "#", 48), ("image", "Ảnh", 300), ("start", "Bắt đầu", 105),
@@ -305,7 +305,15 @@ class App(tk.Tk):
         self.progress_value.set(100)
         self.create_button.configure(state="normal")
         self.status.set(f"Đã tạo: {output}")
-        messagebox.showinfo("Hoàn tất", f"Video đã sẵn sàng để import vào CapCut:\n{output}")
+        messagebox.showinfo(
+            "Xuất video xong",
+            f"MP4 đã được lưu tại:\n{output}\n\n"
+            "Sau khi bấm OK, thư mục chứa video sẽ mở. Trong CapCut, tạo/mở project rồi bấm Import để chọn file MP4."
+        )
+        try:
+            os.startfile(str(output.parent))
+        except OSError as error:
+            messagebox.showerror("Không mở được thư mục", f"Video vẫn đã được tạo tại:\n{output}\n\n{error}")
 
     def _failed(self, error):
         self.encoding = False
