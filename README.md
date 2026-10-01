@@ -7,8 +7,10 @@
 - Kiểm tra số dòng timestamp và số ảnh trước khi xuất.
 - Sắp xếp ảnh theo tên tự nhiên, ví dụ `001.png`, `002.png`, `010.png`.
 - Xem trước thời gian bắt đầu, kết thúc và thời lượng của từng ảnh.
-- Xuất video MP4 có audio, với lựa chọn độ phân giải và FPS.
+- Chọn xuất kèm audio hoặc không kèm audio. Khi bỏ audio, có thể đặt thời lượng hiển thị của ảnh cuối.
+- Xuất video MP4 với lựa chọn độ phân giải và FPS.
 - Hiển thị tiến độ, thời gian đã xử lý, tốc độ FFmpeg và cảnh báo khi lâu chưa có cập nhật.
+- Có thể hủy lúc đang xuất; tool hỏi xác nhận và giữ file MP4 cũ nếu có.
 
 ## Yêu cầu
 
@@ -21,7 +23,7 @@ Nhấp đúp `run_timeline_maker.bat`.
 
 ## Cách dùng
 
-1. Chọn transcript, thư mục ảnh, file audio và đường dẫn MP4 đầu ra.
+1. Chọn transcript, thư mục ảnh, đường dẫn MP4 đầu ra; bật **Kèm audio** nếu muốn thêm âm thanh.
 2. Transcript cần có một timestamp ở đầu mỗi dòng, ví dụ:
 
    ```text
@@ -32,7 +34,7 @@ Nhấp đúp `run_timeline_maker.bat`.
 
 3. Đặt tên ảnh theo thứ tự cần dùng, ví dụ `001.png`, `002.png`, `003.png`.
 4. Bấm **Kiểm tra timeline**. Số ảnh phải bằng số dòng timestamp; timestamp phải tăng dần và bắt đầu từ `00:00`.
-5. Chọn độ phân giải và FPS, rồi bấm **Tạo video MP4**.
+5. Chọn độ phân giải và FPS, rồi bấm **Tạo video MP4**. Nếu bỏ audio, nhập thời lượng của ảnh cuối.
 6. Khi xuất xong, bấm OK để mở thư mục chứa MP4. Trong CapCut, tạo/mở project, bấm **Import**, rồi chọn video vừa tạo.
 
 ## Ghi chú
