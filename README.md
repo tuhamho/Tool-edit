@@ -8,8 +8,8 @@
 - Sắp xếp ảnh theo tên tự nhiên, ví dụ `001.png`, `002.png`, `010.png`.
 - Xem trước thời gian bắt đầu, kết thúc và thời lượng của từng ảnh.
 - Chọn xuất kèm audio hoặc không kèm audio. Khi bỏ audio, có thể đặt thời lượng hiển thị của ảnh cuối.
-- Xuất video MP4 với lựa chọn độ phân giải và FPS.
-- Hiển thị tiến độ, thời gian đã xử lý, tốc độ FFmpeg và cảnh báo khi lâu chưa có cập nhật.
+- Xuất video MP4 với lựa chọn độ phân giải và FPS, dùng preset mã hóa nhanh để rút ngắn thời gian dựng.
+- Hiển thị thanh tiến độ kèm phần trăm hoàn thành, thời gian đã xử lý, tốc độ FFmpeg và cảnh báo khi lâu chưa có cập nhật.
 - Có thể hủy lúc đang xuất; tool hỏi xác nhận và giữ file MP4 cũ nếu có.
 
 ## Yêu cầu
@@ -40,3 +40,5 @@ Nhấp đúp `run_timeline_maker.bat`.
 ## Ghi chú
 
 Kết quả là một clip MP4 chứa chuỗi ảnh và audio. Đây không phải project CapCut gồm các clip ảnh riêng lẻ có thể chỉnh sửa độc lập. Ảnh sẽ được cắt để lấp đầy khung hình đã chọn.
+
+Mã hóa dùng CRF 18 và preset `veryfast`; độ phân giải và FPS đã chọn được giữ nguyên. Preset nhanh có thể tạo file lớn hơn một chút so với preset chậm, nhưng không giảm độ phân giải hay tốc độ khung hình.

@@ -125,8 +125,8 @@ def build_video(images: list[Path], starts: list[float], duration: float, audio:
                      "-map", "[vout]"]
             if audio:
                 args += ["-map", f"{len(images)}:a:0", "-c:a", "aac", "-b:a", "192k"]
-            args += ["-t", f"{duration:.6f}", "-r", str(fps), "-c:v", "libx264", "-preset", "medium",
-                     "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(partial)]
+            args += ["-t", f"{duration:.6f}", "-r", str(fps), "-c:v", "libx264", "-preset", "veryfast",
+                     "-crf", "18", "-threads", "0", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(partial)]
             process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
                                        encoding="utf-8", errors="replace", bufsize=1)
 
@@ -184,6 +184,7 @@ class App(tk.Tk):
         self.last_image_duration = tk.StringVar(value="3")
         self.status = tk.StringVar(value="Chọn transcript và thư mục ảnh để bắt đầu.")
         self.progress_value = tk.DoubleVar(value=0)
+        self.progress_percent = tk.StringVar(value="0%")
         self.encoding = False
         self.cancel_event = None
         self.last_progress_time = 0.0
@@ -276,8 +277,12 @@ class App(tk.Tk):
             self.table.heading(col, text=label)
             self.table.column(col, width=width, anchor="w" if col == "image" else "center")
         self.table.pack(fill="both", expand=True)
-        self.progress = ttk.Progressbar(root, variable=self.progress_value, maximum=100, mode="determinate")
-        self.progress.pack(fill="x", pady=(10, 0))
+        progress_row = ttk.Frame(root, style="App.TFrame")
+        progress_row.pack(fill="x", pady=(10, 0))
+        self.progress = ttk.Progressbar(progress_row, variable=self.progress_value, maximum=100, mode="determinate")
+        self.progress.pack(side="left", fill="x", expand=True)
+        ttk.Label(progress_row, textvariable=self.progress_percent, style="Card.TLabel",
+                  font=("Segoe UI", 10, "bold"), width=5, anchor="e").pack(side="left", padx=(10, 0))
         ttk.Label(root, textvariable=self.status, style="Subtitle.TLabel", wraplength=820).pack(anchor="w", pady=(7, 0))
 
     def _path_row(self, parent, label, variable, picker):
@@ -399,6 +404,7 @@ class App(tk.Tk):
         self.encoding = True
         self.cancel_event = threading.Event()
         self.progress_value.set(0)
+        self.progress_percent.set("0%")
         self.last_progress_time = time.monotonic()
         self.latest_progress_text = "Đang chuẩn bị ảnh và khởi động FFmpeg…"
         self.status.set(self.latest_progress_text)
@@ -435,6 +441,7 @@ class App(tk.Tk):
 
     def _set_progress(self, percent, detail):
         self.progress_value.set(percent)
+        self.progress_percent.set(f"{percent:.0f}%")
         self.last_progress_time = time.monotonic()
         self.latest_progress_text = detail
         self.status.set(detail)
@@ -451,6 +458,7 @@ class App(tk.Tk):
         self.encoding = False
         self.cancel_event = None
         self.progress_value.set(100)
+        self.progress_percent.set("100%")
         self.create_button.configure(state="normal")
         self.cancel_button.configure(state="disabled")
         self.status.set(f"Đã tạo: {output}")
