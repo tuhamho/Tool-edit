@@ -46,8 +46,9 @@ def parse_transcript(path: Path) -> list[Cue]:
         cues.append(Cue(to_seconds(match.group(1)), line[match.end():].strip()))
     if not cues:
         raise ValueError("Không tìm thấy dòng timestamp nào trong transcript.")
-    if cues[0].seconds != 0:
-        raise ValueError("Timestamp đầu tiên cần bắt đầu tại 00:00 để ảnh đầu xuất hiện từ đầu video.")
+    # The first still covers the video's opening frame even when timestamps
+    # start a fraction of a second after zero (for example, [0:00.190]).
+    cues[0].seconds = 0.0
     for previous, current in zip(cues, cues[1:]):
         if current.seconds <= previous.seconds:
             raise ValueError("Timestamp cần tăng dần và không được trùng nhau.")
