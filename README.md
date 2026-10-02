@@ -35,7 +35,7 @@ Nhấp đúp `run_timeline_maker.bat`.
 3. Đặt tên ảnh theo thứ tự cần dùng, ví dụ `001.png`, `002.png`, `003.png`.
 4. Bấm **Kiểm tra timeline**. Số ảnh phải bằng số dòng timestamp; timestamp phải tăng dần và bắt đầu từ `00:00`.
 5. Chọn độ phân giải và FPS, rồi bấm **Tạo video MP4**. Nếu bỏ audio, nhập thời lượng của ảnh cuối.
-6. Khi xuất xong, bấm OK để mở thư mục chứa MP4. Trong CapCut, tạo/mở project, bấm **Import**, rồi chọn video vừa tạo.
+6. Khi xuất xong, chọn có mở CapCut hay không. Tool mở thư mục chứa MP4; nếu mở CapCut, hãy tạo/mở project, bấm **Import**, rồi chọn video vừa tạo.
 
 ## Ghi chú
 

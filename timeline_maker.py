@@ -67,6 +67,20 @@ def get_duration(audio: Path, ffprobe: str) -> float:
     return float(json.loads(result.stdout)["format"]["duration"])
 
 
+def find_capcut_exe() -> Path | None:
+    candidates = []
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    program_files = os.environ.get("PROGRAMFILES")
+    if local_app_data:
+        candidates.append(Path(local_app_data) / "CapCut" / "Apps" / "CapCut.exe")
+    if program_files:
+        candidates.extend([
+            Path(program_files) / "CapCut" / "Apps" / "CapCut.exe",
+            Path(program_files) / "CapCut" / "CapCut.exe",
+        ])
+    return next((candidate for candidate in candidates if candidate.is_file()), None)
+
+
 class ExportCancelled(Exception):
     pass
 
@@ -439,15 +453,30 @@ class App(tk.Tk):
         self.create_button.configure(state="normal")
         self.cancel_button.configure(state="disabled")
         self.status.set(f"Đã tạo: {output}")
-        messagebox.showinfo(
-            "Xuất video xong",
+        open_capcut = messagebox.askyesno(
+            "Video đã sẵn sàng",
             f"MP4 đã được lưu tại:\n{output}\n\n"
-            "Sau khi bấm OK, thư mục chứa video sẽ mở. Trong CapCut, tạo/mở project rồi bấm Import để chọn file MP4."
+            "Bạn có muốn mở CapCut ngay không?\n"
+            "Bạn vẫn cần bấm Import trong CapCut để thêm MP4 vào project.",
         )
         try:
             os.startfile(str(output.parent))
         except OSError as error:
             messagebox.showerror("Không mở được thư mục", f"Video vẫn đã được tạo tại:\n{output}\n\n{error}")
+        if open_capcut:
+            capcut = find_capcut_exe()
+            if capcut:
+                try:
+                    subprocess.Popen([str(capcut)], cwd=str(capcut.parent))
+                    self.status.set("Đã mở CapCut. Import MP4 từ thư mục vừa mở để thêm vào project.")
+                except OSError as error:
+                    messagebox.showerror("Không mở được CapCut", f"Video nằm tại:\n{output}\n\n{error}")
+            else:
+                messagebox.showwarning(
+                    "Không tìm thấy CapCut",
+                    f"Không tìm thấy CapCut ở vị trí cài đặt thường dùng.\n"
+                    f"Bạn có thể mở CapCut thủ công rồi Import file:\n{output}",
+                )
 
     def _failed(self, error):
         self.encoding = False
