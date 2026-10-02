@@ -18,6 +18,11 @@ from tkinter import filedialog, messagebox, ttk
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
 STAMP = re.compile(r"^\s*\[(\d{1,2}:\d{2}(?::\d{2})?(?:\.\d+)?)\]")
+RESOLUTIONS = {
+    "1920 × 1080 (16:9)": (1920, 1080),
+    "1080 × 1920 (9:16)": (1080, 1920),
+    "1280 × 720 (16:9)": (1280, 720),
+}
 
 
 @dataclass
@@ -251,10 +256,10 @@ class App(tk.Tk):
         self._path_row(output_card, "Lưu video tại", self.output, self._pick_output)
         options = ttk.Frame(output_card, style="Card.TFrame")
         options.pack(fill="x", pady=(7, 0))
-        self.resolution = tk.StringVar(value="1920x1080")
+        self.resolution = tk.StringVar(value="1920 × 1080 (16:9)")
         ttk.Label(options, text="Độ phân giải", style="Card.TLabel").pack(side="left")
-        ttk.Combobox(options, textvariable=self.resolution, values=["1920x1080", "1080x1920", "1280x720"],
-                     state="readonly", width=14).pack(side="left", padx=(7, 22))
+        ttk.Combobox(options, textvariable=self.resolution, values=list(RESOLUTIONS),
+                     state="readonly", width=20).pack(side="left", padx=(7, 22))
         ttk.Label(options, text="FPS", style="Card.TLabel").pack(side="left")
         self.fps = tk.StringVar(value="30")
         ttk.Combobox(options, textvariable=self.fps, values=["24", "25", "30", "60"],
@@ -398,7 +403,7 @@ class App(tk.Tk):
         except Exception as error:
             messagebox.showerror("Không thể tạo video", str(error))
             return
-        width, height = map(int, self.resolution.get().split("x"))
+        width, height = RESOLUTIONS[self.resolution.get()]
         self.create_button.configure(state="disabled")
         self.cancel_button.configure(state="normal")
         self.encoding = True
